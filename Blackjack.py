@@ -1,4 +1,4 @@
-############### Blackjack Project #####################
+ ############### Blackjack Project #####################
 
 #Difficulty Normal 😎: Use all Hints below to complete the project.
 #Difficulty Hard 🤔: Use only Hints 1, 2, 3 to complete the project.
@@ -18,84 +18,53 @@
 ## The computer is the dealer.
 
 import random
-from os import system
-from art import logo
+import os
 
-def hit(user_set_cards, score):
-    card = random.choice(cards)
-    user_set_cards.append(card)
-    user_score = sum(user_set_cards)
-    return user_score
-    
+from gamelogic import game_logic
+from art import logo, cards
+from addCard import hit
+from computerlogic import comp_logic
 
-def game_logic(user_score, comp_score):
-    # Logika gry.
-    if user_score > 21:
-        return "Bust! Dealer wins!"
-    elif comp_score > 21:
-        return "Bust! You win!"
-    elif user_score == comp_score:
-        return "Draw!"
-    elif user_score > comp_score:
-        return "You win!"    
-    else: 
-        return "You lose!"
+clear = lambda: os.system("clear")
 
-def comp_logic(set_of_cards, user_score, computer_score):
-    if user_score > 21:
-        return set_of_cards
-    elif user_score == 21:
-        return hit(set_of_cards, computer_score)
-
-def add_card (list_of_cards, available_cards):
-    return list_of_cards.append(random.randint(available_cards))
-
-def game_starter():
-    user_cards = random.choices(cards, k=2)
-    user_score = sum(user_cards)
-    print(f"Your cards: {user_cards}, current score: {user_score}")
-    
-    comp_cards = random.choices(cards, k=1)
-    comp_score = sum(comp_cards)
-    print(f"Computer cards: {comp_cards}, current score: {comp_score}")
-
-clear = lambda: system("clear")
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-user_cards = None
-user_score = None
-comp_score = None
-comp_cards = None
 
+user_cards = random.choices(cards, k=2)
+user_score = sum(user_cards)
 
-starter = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
-print(logo)
+dealer_cards = random.choices(cards, k=1)
+dealer_score = sum(dealer_cards)
 
-user_hit = 'y'
+flag = True
+while flag:
+    print(logo)
+    print(f"Your cards: {user_cards}, points: {sum(user_cards)}.")
+    print(f"Dealer cards: {dealer_cards}, points: {sum(dealer_cards)}")
 
-
-while starter == 'y':
-    user_cards = random.choices(cards, k=2)
-    user_score = sum(user_cards)
-    print(f"Your cards: {user_cards}, current score: {user_score}")
-
-    comp_cards = random.choices(cards, k=1)
-    comp_score = sum(comp_cards)
-    print(f"Computer cards: {comp_cards}, current score: {comp_score}")
-    
-    user_hit = input("Type 'y' to get another card, type 'n' to pass: ")
-    if user_hit == 'y':
-        while user_hit == 'y':
-            user_score = hit(user_cards, user_score)
-            print(f"Your cards: {user_cards}, current score: {user_score}")
-            print(f"Computer cards: {comp_cards}, current score: {comp_score}")
-            print(game_logic(user_score, comp_score))
-            user_hit = input("Type 'y' to get another card, type 'n' to pass: ")
-            # if user_hit == 'n' or user_score > 21:
-            #     print(game_logic(user_score, comp_score))
-            #     clear()
+    dobrac = input ("Do you want next card? Type 'y' or 'n': ")
+    if dobrac == 'n':
+        comp_logic(user_score, dealer_cards)
+        print(f"Your cards: {user_cards}, points: {sum(user_cards)}.")
+        print(f"Dealer cards: {dealer_cards}, points: {sum(dealer_cards)}")
+        print(game_logic(user_score, dealer_score))
+    elif dobrac == 'y':
+        while dobrac == 'y':
+            hit(user_cards)
+            print(f"Your cards: {user_cards}, points: {sum(user_cards)}.")
+            if sum(user_cards) > 21:
+                dealer_cards.append(random.choice(cards))
+                print(f"Dealer cards: {dealer_cards}, points: {sum(dealer_cards)}")
+                print(game_logic(sum(user_cards), sum(dealer_cards)))
+                break
+            print(f"Dealer cards: {dealer_cards}, points: {sum(dealer_cards)}")
+            dobrac = input ("Do you want next card? Type 'y' or 'n': ")  
+        user_score = sum(user_cards)
+        dealer_score = sum(dealer_cards)
+        comp_logic(user_score, dealer_cards)
+        print(f"Your cards: {user_cards}, points: {user_score}.")
+        print(f"Dealer cards: {dealer_cards}, points: {dealer_score}")
+        print(game_logic(user_score, dealer_score))
     else:
-        print(game_logic(user_score, comp_score))
-    
-        clear()
-    
+        print("Type 'y' or 'n'.")
+    flag = False
     
