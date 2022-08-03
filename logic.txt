@@ -1,0 +1,5 @@
+user_score > 21 = Bust! Dealer wins!
+user_score <= 21 and user_score == dealer_score = Draw!
+user_score < 21 and user_score > dealer_score = User win!
+user_score < 21 and user_score < dealer_score = Dealer wins!
+user_score < 21 and dealer_score > 21 = Bust! User win!
